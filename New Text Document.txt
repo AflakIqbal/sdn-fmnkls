@@ -1,0 +1,280 @@
+import java.util.Scanner;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.Rectangle;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.Timer;
+
+public class FlyingJet extends JFrame implements KeyListener, ActionListener{
+	
+	private Graphics dbGraphics;
+	private Image dbImage;		
+	private Timer timer;
+	private int delay= 5;
+	
+	int JetX=280,JetY=607;
+	// for bullets 
+	int bullet1X=300,bullet1Y=680;
+	int bullet2X=300,bullet2Y=850;
+	int bullet3X=300,bullet3Y=1020;
+	int bullet4X=300,bullet4Y=1170;
+	// for enemy 
+	int enmy1X=550,enmy1Y=0,enmy1W=121,enmy1H=130;
+	int enmy2X=400,enmy2Y=-20,enmy2W=141,enmy2H=110;
+	int enmy3X=550,enmy3Y=-200,enmy3W=171,enmy3H=120;
+	int enmy4X=300,enmy4Y=-250,enmy4W=111,enmy4H=140;
+	int enmy5X=180,enmy5Y=-150,enmy5W=81,enmy5H=70;
+	int enmy6X=510,enmy6Y=-130,enmy6W=161,enmy6H=170;
+	int enmy7X=250,enmy7Y=100,enmy7W=151,enmy7H=110;
+	int enmy8X=10,enmy8Y=-320,enmy8W=161,enmy8H=150; 
+	
+	int keyCode=0;	
+	int score=0;
+	boolean play=true;
+	
+	int gameOverY=0;
+	int totalScoreY=0;
+	int totalScore=0;
+	int retry=0;
+	int restart=0;
+
+	
+	public FlyingJet() 
+		{
+			addKeyListener(this);
+			setBounds(0,0,720,660);
+			setVisible(true);
+			setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			timer = new Timer(delay,this);
+			timer.start();
+		}
+		public void paint(Graphics g) 
+			{
+				dbImage= createImage(getWidth(),getHeight());
+				dbGraphics= dbImage.getGraphics();
+				paintComponent(dbGraphics);
+				g.drawImage(dbImage, 0,0, this);
+			}
+	
+		
+		public void paintComponent(Graphics g) 
+				{		
+					// BULLETS 
+					g.setColor(Color.red);	
+					g.fillOval(bullet1X,bullet1Y,20,20);
+					g.fillOval(bullet2X,bullet2Y,20,20);
+					g.fillOval(bullet3X,bullet3Y,20,20);
+					g.fillOval(bullet4X,bullet4Y,20,20); 
+					
+					//ENEMY
+					g.setColor(Color.orange);
+					g.fillOval(enmy1X, enmy1Y,25,25);
+					g.setColor(Color.pink);
+					g.fillOval(enmy2X, enmy2Y,25,25);
+					g.setColor(Color.blue);
+					g.fillOval(enmy3X, enmy3Y,25,25);
+					g.setColor(Color.black);
+					g.fillOval(enmy4X, enmy4Y,25,25);
+					g.setColor(Color.DARK_GRAY);
+					g.fillOval(enmy5X, enmy5Y,25,25);
+					g.setColor(Color.yellow);
+					g.fillOval(enmy6X, enmy6Y,25,25);
+					g.setColor(Color.green);
+					g.fillOval(enmy7X, enmy7Y,25,25);
+					g.setColor(Color.CYAN);
+					g.fillOval(enmy8X, enmy8Y,25,25);
+					// JET 
+					g.setColor(Color.black);
+					g.fillOval(JetX, JetY, 101, 155);
+					//score 
+					g.setColor(Color.black);
+					g.drawString("SCORE :"+score, 70,80);
+					// gameOver	
+					g.setColor(Color.black);
+					g.setFont(new Font("arial",Font.BOLD,50));
+					g.drawString("GAME OVER",210,gameOverY);
+					g.setFont(new Font("arial",Font.PLAIN,20));
+					g.drawString("Press(Enter) to restart",265,restart);
+					g.setFont(new Font("arial",Font.PLAIN,30));
+					g.drawString("Total Score = "+totalScore, 260, totalScoreY);
+			
+					repaint();
+				}
+			@Override
+					public void keyPressed(KeyEvent e) 
+									{	
+											keyCode=e.getKeyCode();
+											
+												if(keyCode==KeyEvent.VK_LEFT) 
+													{	
+													if(play==true) 
+														{
+															JetX-=10; 
+														}
+													}		
+										if(keyCode==KeyEvent.VK_RIGHT)
+											{
+											if(play==true) 
+												{
+													JetX+=10;
+												}
+											}
+										if(keyCode==KeyEvent.VK_ENTER) {
+											restart();
+										}
+									}
+			public void restart() {
+				play= true ;
+			
+				bullet1Y=680;
+				bullet2Y=850; 
+				bullet3Y=1020;
+				bullet4Y=1170;
+				 
+				enmy1Y=0;
+				enmy2Y=-20;
+				enmy3Y=-200;
+				enmy4Y=-250;
+				enmy5Y=-150;
+				enmy6Y=-130;
+				enmy7Y=100;
+				enmy8Y=-320;
+				
+				restart=0;
+				gameOverY=0;
+				score=0;
+				totalScoreY=0;
+		
+				
+			}
+		public void bubblesComing() 
+			{ 
+				if(play==true) 
+				{
+					enmy1Y++;enmy2Y++;enmy3Y++;enmy4Y++;enmy5Y++;enmy6Y++;enmy7Y++;enmy8Y++;
+				
+					if(enmy1Y>650) {enmy1Y=0; enmy1Y++;}
+					if(enmy2Y>650) {enmy2Y=0; enmy2Y++;}
+					if(enmy3Y>650) {enmy3Y=0; enmy3Y++;}
+					if(enmy4Y>650) {enmy4Y=0; enmy4Y++;}
+					if(enmy5Y>650) {enmy5Y=0; enmy5Y++;}
+					if(enmy6Y>650) {enmy6Y=0; enmy6Y++;}
+					if(enmy7Y>650) {enmy7Y=0; enmy7Y++;}
+					if(enmy8Y>650) {enmy8Y=0; enmy8Y++;}
+			
+				}
+		
+			}
+		public void gameOver() 
+			{
+				if(play== false) 
+					{
+						gameOverY=270;
+						restart=340;
+						totalScoreY=310;
+					}
+			}
+		public void bullets() 
+			{
+				if(play==true) 
+					{
+					bullet1Y--;bullet2Y--;bullet3Y--;bullet4Y--;
+			
+					if(bullet1Y<0) {bullet1Y=680; bullet1Y--;}      if(bullet1Y>600) {bullet1X=JetX+40;}
+					if(bullet2Y<0) {bullet2Y=680; bullet2Y--;}  	if(bullet2Y>600) {bullet2X=JetX+40;}
+					if(bullet3Y<0) {bullet3Y=680; bullet3Y--;}		if(bullet3Y>600) {bullet3X=JetX+40;}
+					if(bullet4Y<0) {bullet4Y=680; bullet4Y--;}		if(bullet4Y>600) {bullet4X=JetX+40;}
+					}
+			}
+		public void jetCrashesWithBall() 
+			{
+			
+				if(new Rectangle(JetX, JetY+30, 81, 155).intersects (new Rectangle(enmy1X, enmy1Y,25,25))) 			{ play=false;}
+				if(new Rectangle(JetX, JetY+30, 81, 155).intersects (new Rectangle(enmy2X, enmy2Y,25,25))) 			{ play=false;}
+				if(new Rectangle(JetX, JetY+30, 81, 155).intersects (new Rectangle(enmy3X, enmy3Y,25,25))) 			{ play=false;}
+				if(new Rectangle(JetX, JetY+30, 81, 155).intersects (new Rectangle(enmy4X, enmy4Y,25,25))) 			{ play=false;}
+				if(new Rectangle(JetX, JetY+30, 81, 155).intersects (new Rectangle(enmy5X, enmy5Y,25,25))) 			{ play=false;}
+				if(new Rectangle(JetX, JetY+30, 81, 155).intersects (new Rectangle(enmy6X, enmy6Y,25,25))) 			{ play=false;}
+				if(new Rectangle(JetX, JetY+30, 81, 155).intersects (new Rectangle(enmy7X, enmy7Y,25,25))) 			{ play=false;}
+				if(new Rectangle(JetX, JetY+30, 81, 155).intersects (new Rectangle(enmy8X, enmy8Y,25,25))) 			{ play=false;}
+			}
+		public void bulletsShootsBubbles() 
+				{
+						// FOR ENMY1
+						if(new Rectangle(bullet1X,bullet1Y,20,20).intersects (new Rectangle(enmy1X, enmy1Y,25,25))) 	{score+=5; enmy1Y=-200; enmy1Y++;}
+						if(new Rectangle(bullet2X,bullet2Y,20,20).intersects (new Rectangle(enmy1X, enmy1Y,25,25))) 	{score+=5; enmy1Y=-200; enmy1Y++;}
+						if(new Rectangle(bullet3X,bullet3Y,20,20).intersects (new Rectangle(enmy1X, enmy1Y,25,25))) 	{score+=5; enmy1Y=-200; enmy1Y++;}
+						if(new Rectangle(bullet4X,bullet4Y,20,20).intersects (new Rectangle(enmy1X, enmy1Y,25,25))) 	{score+=5; enmy1Y=-200; enmy1Y++;}
+						// FOR ENMY2
+						if(new Rectangle(bullet1X,bullet1Y,20,20).intersects (new Rectangle(enmy2X, enmy2Y,25,25))) 	{score+=5; enmy2Y=-200; enmy2Y++;}
+						if(new Rectangle(bullet2X,bullet2Y,20,20).intersects (new Rectangle(enmy2X, enmy2Y,25,25))) 	{score+=5; enmy2Y=-200; enmy2Y++;}
+						if(new Rectangle(bullet3X,bullet3Y,20,20).intersects (new Rectangle(enmy2X, enmy2Y,25,25))) 	{score+=5; enmy2Y=-200; enmy2Y++;}
+						if(new Rectangle(bullet4X,bullet4Y,20,20).intersects (new Rectangle(enmy2X, enmy2Y,25,25))) 	{score+=5; enmy2Y=-200; enmy2Y++;}
+						// FOR ENMY3
+						if(new Rectangle(bullet1X,bullet1Y,20,20).intersects (new Rectangle(enmy3X, enmy3Y,25,25))) 	{score+=5; enmy3Y=-200; enmy3Y++;}
+						if(new Rectangle(bullet2X,bullet2Y,20,20).intersects (new Rectangle(enmy3X, enmy3Y,25,25))) 	{score+=5; enmy3Y=-200; enmy3Y++;}
+						if(new Rectangle(bullet3X,bullet3Y,20,20).intersects (new Rectangle(enmy3X, enmy3Y,25,25))) 	{score+=5; enmy3Y=-200; enmy3Y++;}
+						if(new Rectangle(bullet4X,bullet4Y,20,20).intersects (new Rectangle(enmy3X, enmy3Y,25,25))) 	{score+=5; enmy3Y=-200; enmy3Y++;}
+						// FOR ENMY4
+						if(new Rectangle(bullet1X,bullet1Y,20,20).intersects (new Rectangle(enmy4X, enmy4Y,25,25))) 	{score+=5; enmy4Y=-200; enmy4Y++;}
+						if(new Rectangle(bullet2X,bullet2Y,20,20).intersects (new Rectangle(enmy4X, enmy4Y,25,25))) 	{score+=5; enmy4Y=-200; enmy4Y++;}
+						if(new Rectangle(bullet3X,bullet3Y,20,20).intersects (new Rectangle(enmy4X, enmy4Y,25,25))) 	{score+=5; enmy4Y=-200; enmy4Y++;}
+						if(new Rectangle(bullet4X,bullet4Y,20,20).intersects (new Rectangle(enmy4X, enmy4Y,25,25))) 	{score+=5; enmy4Y=-200; enmy4Y++;}
+						// FOR ENMY5
+						if(new Rectangle(bullet1X,bullet1Y,20,20).intersects (new Rectangle(enmy5X, enmy5Y,25,25))) 	{score+=5; enmy5Y=-200; enmy5Y++;}
+						if(new Rectangle(bullet2X,bullet2Y,20,20).intersects (new Rectangle(enmy5X, enmy5Y,25,25))) 	{score+=5; enmy5Y=-200; enmy5Y++;}
+						if(new Rectangle(bullet3X,bullet3Y,20,20).intersects (new Rectangle(enmy5X, enmy5Y,25,25))) 	{score+=5; enmy5Y=-200; enmy5Y++;}
+						if(new Rectangle(bullet4X,bullet4Y,20,20).intersects (new Rectangle(enmy5X, enmy5Y,25,25))) 	{score+=5; enmy5Y=-200; enmy5Y++;}
+						// FOR ENMY6
+						if(new Rectangle(bullet1X,bullet1Y,20,20).intersects (new Rectangle(enmy6X, enmy6Y,25,25))) 	{score+=5; enmy6Y=-200; enmy6Y++;}
+						if(new Rectangle(bullet2X,bullet2Y,20,20).intersects (new Rectangle(enmy6X, enmy6Y,25,25))) 	{score+=5; enmy6Y=-200; enmy6Y++;}
+						if(new Rectangle(bullet3X,bullet3Y,20,20).intersects (new Rectangle(enmy6X, enmy6Y,25,25))) 	{score+=5; enmy6Y=-200; enmy6Y++;}
+						if(new Rectangle(bullet4X,bullet4Y,20,20).intersects (new Rectangle(enmy6X, enmy6Y,25,25))) 	{score+=5; enmy6Y=-200; enmy6Y++;}
+						// FOR ENMY7
+						if(new Rectangle(bullet1X,bullet1Y,20,20).intersects (new Rectangle(enmy7X, enmy7Y,25,25))) 	{score+=5; enmy7Y=-200; enmy7Y++;}
+						if(new Rectangle(bullet2X,bullet2Y,20,20).intersects (new Rectangle(enmy7X, enmy7Y,25,25))) 	{score+=5; enmy7Y=-200; enmy7Y++;}
+						if(new Rectangle(bullet3X,bullet3Y,20,20).intersects (new Rectangle(enmy7X, enmy7Y,25,25))) 	{score+=5; enmy7Y=-200; enmy7Y++;}
+						if(new Rectangle(bullet4X,bullet4Y,20,20).intersects (new Rectangle(enmy7X, enmy7Y,25,25))) 	{score+=5; enmy7Y=-200; enmy7Y++;}
+						// FOR ENMY8
+						if(new Rectangle(bullet1X,bullet1Y,20,20).intersects (new Rectangle(enmy8X, enmy8Y,25,25))) 	{score+=5; enmy8Y=-200; enmy8Y++;}
+						if(new Rectangle(bullet2X,bullet2Y,20,20).intersects (new Rectangle(enmy8X, enmy8Y,25,25))) 	{score+=5; enmy8Y=-200; enmy8Y++;}
+						if(new Rectangle(bullet3X,bullet3Y,20,20).intersects (new Rectangle(enmy8X, enmy8Y,25,25))) 	{score+=5; enmy8Y=-200; enmy8Y++;}
+						if(new Rectangle(bullet4X,bullet4Y,20,20).intersects (new Rectangle(enmy8X, enmy8Y,25,25))) 	{score+=5; enmy8Y=-200; enmy8Y++;}
+						
+						totalScore=score;
+				}
+		@Override
+		public void actionPerformed(ActionEvent e) 
+			{
+				bubblesComing();
+				bullets();
+				jetCrashesWithBall();
+				bulletsShootsBubbles();
+				gameOver();
+			}
+		@Override
+
+		public void keyReleased(KeyEvent arg0) 
+			{
+				// TODO Auto-generated method stub		
+			}
+		@Override
+		public void keyTyped(KeyEvent arg0) 
+			{
+				// TODO Auto-generated method stub		
+			}
+		public static void main(String[] args) 
+			{
+				new FlyingJet();		
+			}
+}
+
